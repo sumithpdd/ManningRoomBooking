@@ -19,7 +19,11 @@ export class UsersComponent implements OnInit {
               private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.users = this.dataService.users;
+     this.dataService.getUsers().subscribe(
+      (data)=>{
+        this.users =data;
+      }
+    );
     this.route.queryParams.subscribe(
       (params) => {
         const id = params['id'];
