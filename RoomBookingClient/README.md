@@ -49,3 +49,7 @@ export class AppModule { }
     "../node_modules/font-awesome/css/font-awesome.css"
 ]
 ```
+
+## To create a data service
+
+ng g s Data
