@@ -16,10 +16,18 @@ export class UserDetailComponent implements OnInit {
   constructor(private dataService: DataService, private router: Router) {}
 
   ngOnInit() {}
+
   editUser() {
     this.router.navigate(['admin', 'users'], {
       queryParams: { action: 'edit', id: this.user.id },
     });
   }
-
+  deleteUser() {
+    this.dataService.deleteUser(this.user.id).subscribe((data) => {
+      this.router.navigate(['admin', 'users']);
+    });
+  }
+  resetPassword() {
+    this.dataService.resetuserPassword(this.user.id).subscribe();
+  }
 }
