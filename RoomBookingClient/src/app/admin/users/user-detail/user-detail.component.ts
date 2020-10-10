@@ -28,6 +28,6 @@ export class UserDetailComponent implements OnInit {
     });
   }
   resetPassword() {
-    this.dataService.resetuserPassword(this.user.id).subscribe();
+    this.dataService.resetUserPassword(this.user.id).subscribe();
   }
 }
