@@ -53,3 +53,7 @@ export class AppModule { }
 ## To create a data service
 
 ng g s Data
+
+ng serve
+ng serve --prod
+ng serve -c local
