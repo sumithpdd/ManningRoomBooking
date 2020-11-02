@@ -1,0 +1,16 @@
+{
+  "name": "objectionjskexsqllite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^0.21.11",
+    "objection": "^2.2.3",
+    "sqlite3": "^5.0.0"
+  }
+}
