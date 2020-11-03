@@ -33,9 +33,12 @@ async function createSchema() {
     });
     await knex.schema.createTable('person', table => {
         table.increments('id').primary();
-        table.integer('parentId').references('person.id');
         table.string('firstName');
         table.string('lastName');
+        table.integer('parentId')
+            .references('id')
+            .inTable('Person')
+            .index();
     });
     await knex.schema.createTable('movie_person', function(table) {
         table.integer('movieId')
@@ -76,7 +79,7 @@ async function main() {
         ]
     });
     console.log('created:', sylvester);
-    
+
     // Fetch all people named Sylvester and sort them by id.
     // Load `children` relation eagerly.
     const sylvesters = await Person.query()
@@ -86,40 +89,56 @@ async function main() {
 
     console.log('sylvesters:', sylvesters);
     console.log('------------------');
+    const graphWithRefs = [{
+            name: 'The terminator',
+            actors: [{
+                "#id": 'arnold',
+                firstName: 'Arnold',
+                lastName: 'Schwarzenegger',
+            }, {
+                firstName: 'Michael',
+                lastName: 'Biehn'
+            }],
+            reviews: [{
+                title: 'Great movie',
+                stars: 5,
+                text: 'Awesome',
 
-    const Theterminator = await Movie.query().insertGraph({
-        name: 'The terminator',
-        actors: [{
-            firstName: 'Arnold',
-            lastName: 'Schwarzenegger',
+                reviewer: {
+                    firstName: 'Some',
+                    lastName: 'Random-Dude'
+                }
+            }]
         }, {
-            firstName: 'Michael',
-            lastName: 'Biehn'
-        }],
+            name: 'Terminator 2: Judgment Day',
+            actors: [{
+                "#ref": 'arnold'
+            }]
+        },
+        {
+            name: 'Predator',
 
-        reviews: [{
-            title: 'Great movie',
-            stars: 5,
-            text: 'Awesome',
+            actors: [{
+                "#ref": 'arnold'
+            }]
+        }
+    ];
 
-            reviewer: {
-                firstName: 'Some',
-                lastName: 'Random-Dude'
-            }
-        }]
-    });
+    const Theterminator = await Movie
+        .query()
+        .insertGraph(graphWithRefs, { allowRefs: true }, );
 
     console.log('created:', Theterminator);
 
     // Fetch all people named Sylvester and sort them by id.
     // Load `children` relation eagerly.
-    const sylvesters = await Person.query()
-        .where('firstName', 'Sylvester')
-        .withGraphFetched('children')
-        .orderBy('id');
+    const terminators = await Movie
+        .query()
+        .where('name', 'like', '%terminator%')
+        .withGraphFetched('[actors.parent, reviews.reviewer]');
 
-    console.log('sylvesters:', sylvesters);
-    
+    console.log(JSON.stringify(terminators, null, 2));
+
 
 }
 

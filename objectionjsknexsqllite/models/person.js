@@ -17,6 +17,14 @@ class Person extends Model {
                     to: 'person.parentId'
                 }
             },
+            parent: {
+                relation: Model.HasManyRelation,
+                modelClass: Person,
+                join: {
+                    from: 'person.id',
+                    to: 'person.parentId'
+                }
+            },
             reviews: {
                 relation: Model.HasManyRelation,
                 modelClass: Review,
